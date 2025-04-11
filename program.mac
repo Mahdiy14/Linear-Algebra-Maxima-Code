@@ -140,13 +140,14 @@ random_lowertriangular(n, x) := block(
 
 /* Abolfazl */
 random_invertible(n, x) := block(
-    [B],
+    [B , i , j],
     B : zeromatrix(n, n),
-    while determinant(B) = 0 do (
-        for i:1 thru n do (
-            for j:1 thru n do (
-                B[i, j] : 2 * random(x) - x
-            )
+    for i:1 thru n while determinant(B) = 0 do(
+        for j:1 thru n do(
+            B[i][j] :  if integerp(x) then 
+                                    random(2*x + 1) - x
+                                else 
+                                    x * (2*random(1.0) - 1)
         )
     ),
     B
@@ -239,3 +240,17 @@ is_lower_trianngular(A):=block(
     ),
     return(result)
 )$
+/* 
+elementary_inverse(A):=block(
+    [B,C],
+    B:to_matrix(A),
+    if check_elementary(B) = 1 then(
+
+    )
+    else if check_elementary(B) = 2 then(
+
+    )
+    else if check_elementary(B) = 3 then(
+
+    ) else return("input is not elemetary")
+)$ */
