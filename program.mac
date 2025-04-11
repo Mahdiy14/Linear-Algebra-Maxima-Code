@@ -240,17 +240,38 @@ is_lower_trianngular(A):=block(
     ),
     return(result)
 )$
-/* 
-elementary_inverse(A):=block(
-    [B,C],
-    B:to_matrix(A),
-    if check_elementary(B) = 1 then(
 
+elementary_inverse(A):=block(
+    [n,B,C,diff_rows],
+    B:to_matrix(A),
+    n:length(B),
+    if n # length(B[1]) then return(0),
+    C : zeromatrix(n,n),
+    I: ident(n),
+    if B = I then (
+        return(I)
+    ),
+    if check_elementary(B) = 1 then(
+        C: I,
+        for i:1 thru n do(
+            if B[i][i] # 1 then(
+                C[i][i] : (1/B[i][i])
+            )
+        ),
+        return(C)
     )
     else if check_elementary(B) = 2 then(
-
+        C:I,
+        for i:1 thru n do(
+            for j:1 thru n do(
+                if i#j and B[i][j]#0 then(
+                    C[i][j] : -B[i][j]
+                )
+            )
+        ),
+        return(C)
     )
     else if check_elementary(B) = 3 then(
-
+        return(B)
     ) else return("input is not elemetary")
-)$ */
+)$
