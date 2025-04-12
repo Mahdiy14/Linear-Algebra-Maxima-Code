@@ -1,9 +1,11 @@
 
+/*q1*/
  to_matrix(L):=block(
     if matrixp(L) then L
     else apply('matrix,L)
  )$
 
+/*q2*/
 check_row_echelon(A) := block(
     [rows, cols, pivots, i, j, is_echelon , B],
     B : to_matrix(A),
@@ -124,8 +126,6 @@ check_elementary(A) := block(
     0
 )$
 
-
-/* Abolfazl */
 random_lowertriangular(n, x) := block(
     [B],
     B : zeromatrix(n, n),
@@ -137,8 +137,6 @@ random_lowertriangular(n, x) := block(
     B
 )$
 
-
-/* Abolfazl */
 random_invertible(n, x) := block(
     [B , i , j],
     B : zeromatrix(n, n),
@@ -153,7 +151,6 @@ random_invertible(n, x) := block(
     B
 )$
 
-/* Abolfazl */
 random_permutation(n) := block(
     [B, A, t1, t2, h1, h2],
     B : zeromatrix(n, n),
@@ -197,8 +194,10 @@ random_reduced_row_echelon(n, m, x) := block(
     A
 )$
 
+
+/*q4*/
 triangular_inverse(A) := block(
-[n,I,D:[],finalmatrix,x],
+    [n,I,D:[],finalmatrix,x],
     A: to_matrix(A),
     n: length(A),
     finalmatrix:ident(n),
@@ -310,6 +309,7 @@ elementary_inverse(A):=block(
     ) else return("input is not elemetary")
 )$
 
+/*q5*/
 gauss_row_echelon(P0):= block(
     [rows,cols,B,i,j,k,d,E,L1,P,L2 , list1, list2 , result_list],
      B:to_matrix(P0),
@@ -415,6 +415,7 @@ gauss_jordan(Q0):=block(
     return(result_list)
 )$
 
+/*q8*/
 lpl(A):=block(
     [n,B,i,j,d,E,L1,P,L2 , list1, list2,list3 , result_list],
     B:to_matrix(A),
@@ -656,6 +657,7 @@ inverse3(A)=block(
 
 )$
 
+/*q9*/
 plu(A):=block(
      [n,B,i,j,d,E,L1,P,U1 , list1, list2,list3 , result_list],
     B:to_matrix(A),
