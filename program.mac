@@ -322,7 +322,61 @@ gauss_row_echelon(P0):= block(
 )$
 
 gauss_jordan(Q0):=block(
-
+    [rows,cols,B,i,j,k,d,E,L1,P,L2 , list1, list2 , result_list],
+     B:to_matrix(Q0),
+    rows:length(B),
+    cols:length(B[1]),
+    result_list :[],
+    list1 :[],
+    list2:[],
+    i:1,
+    for j :1 thru cols while i<rows+1 do(
+        if B[i][j]#0 then(
+            for k : 1 thru rows do(
+                if B[k][j]#0 and k#i then(
+                    E : ident(rows),
+                    E[k][j] : -(B[k][j]/B[i][j]),
+                    list1 : endcons(E , list1),
+                    B : E.B,
+                    list2 : endcons(B , list2)
+                )
+            ) 
+        )else if B[i][j]=0 then (
+            for k : i+1 thru rows do(
+                if B[k][j]#0 then(
+                    E : ident(rows),
+                    E[i][i]:0,
+                    E[k][k]:0,
+                    E[i][k]:1,
+                    E[k][i]:1,
+                    list1 : endcons(E , list1),
+                    B : E.B,
+                    list2 : endcons(B , list2),
+                    i:i-1,
+                    j:j-1,
+                    return(0)
+                )else if k=rows and B[k][j]=0 then(
+                    i:i-1
+                )
+            ) 
+        ),
+        i:i+1
+    ),
+    i:1,
+    for j:1 thru cols while i < rows+1 do(
+        if B[i][j]#0 then(
+            E : ident(rows),
+            E[i][i] : 1/B[i][j],
+            list1: endcons(E,list1),
+            B:E.B,
+            list2:endcons(B,list2),
+            i:i+1,
+            j:0
+        )
+    ),
+    
+    result_list : [list1,list2],
+    return(result_list)
 )$
 
 lpl(A):=block(
