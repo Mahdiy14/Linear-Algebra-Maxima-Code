@@ -140,7 +140,7 @@ random_lowertriangular(n, x) := block(
 random_invertible(n, x) := block(
     [B , i , j],
     B : zeromatrix(n, n),
-    for i:1 thru n while determinant(B) = 0 do(
+    for i:1 thru n while det1(B) = 0 do(
         for j:1 thru n do(
             B[i][j] :  if integerp(x) then 
                                     random(2*x + 1) - x
