@@ -246,6 +246,7 @@ triangular_inverse(A) := block(
     A: to_matrix(A),
     n: length(A),
     finalmatrix:ident(n),
+    if triangular_det(A) = 0 then return(false),
     for x:1 thru n do
        D:append(D,[A[x][x]]),
     if is_lower_triangular(A) then(
@@ -518,12 +519,13 @@ if duration1 < duration2 then print("det1's faster") else print("det2's faster")
 )$
 
 /*q7*/ 
+  
  inverse1(A) := block(
  [finalmatrix, E, L, K, n, P, x, last_row, is_last_row_zero],
  A: to_matrix(A),
  L:gauss_row_echelon(A),
  K:length(L[1]),
- last_row: L[2][K][length(L[2][K])],
+ last_row: L[1][K][length(L[1][K])],
  is_last_row_zero: apply("and", map(lambda([x], x = 0), last_row)),
  if K=0 then return(triangular_inverse(A))
  else if is_last_row_zero then return(false)
@@ -559,7 +561,7 @@ adjugate(A) := block(
             )
         ),
         Azegon : apply(matrix, Aprim),
-            x : (-1)^(i+j) * determinant(Azegon),
+            x : (-1)^(i+j) * det1(Azegon),
             FinalMatrix[i][j] : x
         )
     ),
@@ -568,15 +570,30 @@ adjugate(A) := block(
 )$
 
 
-
-inverse2(A) := block(
-A: to_matrix(A),
-landa: 1/determinant(A),
-inverseA: adjugate(A)*landa,
-return(inverseA)
+det1(A) := block(
+   [L, det:1, i, K],
+    A: to_matrix(A),
+    L:gauss_row_echelon(A),
+    K:length(L[1]),
+    if K = 0 then return(triangular_det(A))
+    else(
+    for i:1 thru K do(
+    det: det*triangular_det(L[2][i])
+    ),
+    det: det*triangular_det(L[1][K]),
+    return(det)
+    )
 )$
 
 
+inverse2(A) := block(
+A: to_matrix(A),
+if det1(A) = 0 then return(false) else(
+landa: 1/det1(A),
+inverseA: adjugate(A)*landa,
+return(inverseA)
+)
+)$
 
 inverse1VSinverse2(A) := block(
 A: to_matrix(A),
@@ -782,6 +799,7 @@ inverse_lpl(A):=block(
 inverse3(A):=block(
     [B,L,K,L1,P,L2,I1,I2, result],
     B:to_matrix(A),
+    if det1(B) = 0 then return(false),
     L: lpl(A),
     K:L[3],
     L1:K[1],
