@@ -274,7 +274,7 @@ particular_solution(L, a) := block(
 /* q5 */
 
  mat_linsolve(list1 , list2):=block(
-    [expr_list , x_list , expr_count ,X , r , s , i , var_row , eq_list , matrix_list , matrix_count , k , l , coef_matrix,augcoef_matrix, N_basis , B , b , A],
+    [expr_list , x_list , expr_count ,X , r , s , i , var_row , eq_list , matrix_list , matrix_count , k , l , coef_matrix,augcoef_matrix, N_basis , B , b , A , particular_solution],
     expr_list : list1,
     expr_count : length(expr_list),
     r : list2[2],
@@ -302,10 +302,12 @@ particular_solution(L, a) := block(
     coef_matrix :coefmatrix(eq_list , flatten(X)) ,
     augcoef_matrix : augcoefmatrix(eq_list , flatten(X)),
     for i:1 thru length(augcoef_matrix) do(
-        b : endcons(augcoef_matrix[i][length(augcoef_matrix[1])] , b)
+        b : endcons(-1*augcoef_matrix[i][length(augcoef_matrix[1])] , b)
     ),
     N_basis : four_basis(coef_matrix)[3],
-    A : change_vector_to_matrix(particular_solution(coef_matrix , b) , r , s),
+    particular_solution : particular_solution(coef_matrix , b),
+    if particular_solution # false then A : change_vector_to_matrix(particular_solution(coef_matrix , b) , r , s)
+    else A : false ,
     if N_basis = false then(
         if A = false then return([[] , []])
         else return([[] , A])
