@@ -271,6 +271,27 @@ particular_solution(L, a) := block(
 )$
 
 
+/* q4 */
+
+mat_bb(A, B, Phi) := block (
+  [T, P, a, b, Phiprim],
+  P: transpose(apply(matrix, Phi)),
+  a: transpose(apply(matrix, A)),
+  b: transpose(apply(matrix, B)),
+  T: invert(b).a,
+  Phiprim: T.P,
+  return(Phiprim)
+)$
+
+change_of_basis_matrix(B1, B2) := block(
+  [a, b, T],
+  a: transpose(apply(matrix, B1)),
+  b: transpose(apply(matrix, B2)),
+  T: invert(b).a,
+  return(T)
+)$
+
+
 /* q5 */
 
  mat_linsolve(list1 , list2):=block(
