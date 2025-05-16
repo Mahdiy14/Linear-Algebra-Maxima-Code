@@ -269,3 +269,64 @@ particular_solution(L, a) := block(
     /* اگر جواب نهایی تعریف نشده باشد، false برگردان */
     return(if w = 'undefined then false else w)
 )$
+
+
+/* q5 */
+
+ mat_linsolve(list1 , list2):=block(
+    [expr_list , x_list , expr_count ,X , r , s , i , var_row , eq_list , matrix_list , matrix_count , k , l , coef_matrix,augcoef_matrix, N_basis , B , b , A],
+    expr_list : list1,
+    expr_count : length(expr_list),
+    r : list2[2],
+    s : list2[3],
+    X :[],
+    matrix_list : [],
+    eq_list : [],
+    N_basis : [],
+    B : [],
+    b: [],
+    for i:1 thru r do(
+        X : endcons( makelist(concat(x,i,j) , j , s) , X)
+    ),
+    for i:1 thru expr_count do(
+        matrix_list :  endcons(ev(expr_list[i] , list2[1] : to_matrix(X) , nouns ) , matrix_list)
+    ),
+    matrix_count : length(matrix_list),
+    for i:1 thru matrix_count do(
+        for k:1 thru length(matrix_list[i]) do(
+            for l:1 thru length(matrix_list[i][1]) do(
+                eq_list : endcons(matrix_list[i][k][l] = 0 , eq_list)
+            )
+        )
+    ),
+    coef_matrix :coefmatrix(eq_list , flatten(X)) ,
+    augcoef_matrix : augcoefmatrix(eq_list , flatten(X)),
+    for i:1 thru length(augcoef_matrix) do(
+        b : endcons(augcoef_matrix[i][length(augcoef_matrix[1])] , b)
+    ),
+    N_basis : four_basis(coef_matrix)[3],
+    A : change_vector_to_matrix(particular_solution(coef_matrix , b) , r , s),
+    if N_basis = false then(
+        if A = false then return([[] , []])
+        else return([[] , A])
+    ),
+    for i:1 thru length(N_basis) do(
+        B : endcons(change_vector_to_matrix(N_basis[i] , r , s), B)
+    ),
+    if A = false then return([B , []])
+    else return([B , A])
+)$
+
+change_vector_to_matrix(v , r , s):=block(
+    [vector , n , i , j , M],
+    vector : v,
+    M : zeromatrix(r,s),
+    n:0,
+    for i:1 thru r do(
+        for j:1 thru s do(
+            n: n+1 ,
+            M[i][j] : vector[1][n]
+        )
+    ),
+    M
+)$
