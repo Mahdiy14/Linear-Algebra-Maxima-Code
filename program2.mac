@@ -119,6 +119,67 @@ four_basis_mat(L) := block(
 )$
 
 
+/*q2*/
+
+setdifference_vectors(L1, L2) := block(
+  [res : [], v],
+  for v in L1 do (
+    if not some(lambda([w], equal_vectors(v, w)), L2) then
+      res : endcons(v, res)
+  ),
+  get_basis(res) 
+)$
+
+intersection_matrices(L1, L2) := block(
+  [res : [], m],
+  for m in L1 do (
+    if some(lambda([n], m = n), L2) then
+      res : endcons(m, res)
+  ),
+  return(res)
+)$
+
+subspaces(L1, L2) := block(
+  [P, Q, B1, B2, C, U, Cp],
+
+    /* اگر هر دو تهی باشن */
+  if L1 = [] and L2 = [] then return([[], [], [], []]),
+
+  /* اگر فقط L1 تهی باشه */
+  if L1 = [] then (
+    B2: four_basis(to_matrix(L2))[1],
+    return([B2, [], [], B2])
+  ),
+
+  /* اگر فقط L2 تهی باشه */
+  if L2 = [] then (
+    B1: four_basis(to_matrix(L1))[1],
+    return([B1, [], B1, []])
+  ),
+
+  L1: to_matrix(L1),
+  L2: to_matrix(L2),
+  
+
+  A : addrow(L1,L2),
+
+  P: four_basis(A)[1],
+
+
+  B1 : four_basis(L1)[1],
+  B2 : four_basis(L2)[1],
+  
+  Q : intersection_matrices(B1, B2),
+
+  C: setdifference_vectors(B1,Q),
+    
+    Cp:setdifference_vectors(B2,Q),
+
+
+
+  [P,Q,C,Cp]
+)$
+
 /*q3*/
 
 
