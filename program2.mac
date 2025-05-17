@@ -37,7 +37,7 @@ remove_first_rows_cols(M, r, c) := block(
 
 
 four_basis(L) := block(
-    [R, R_basis, C_basis, N_basis, N_prime_basis, m, n, i, non_zero_rows],
+    [R, R_basis, C_basis, N_basis, N_prime_basis, m, n, i, non_zero_rows , R_basis_list , C_basis_list , N_basis_list , N_prime_basis_list , k , l],
     A: to_matrix(L),
     /* ابعاد ماتریس */
     m: matrix_size(A)[1], /*تعداد سطر ها */
@@ -54,20 +54,32 @@ four_basis(L) := block(
     R: echelon(A),
 
     R_basis:nonzero_rows(R),
-
+    R_basis_list : [],
+    C_basis_list : [],
+    N_basis_list : [],
+    N_prime_basis_list : [],
     if  R_basis = [] then R_basis : false,
-
-    
-
-
+    if R_basis # false then(
+        for k:1 thru length(R_basis) do(
+            for l:1 thru length(R_basis[k]) do(
+                R_basis_list: endcons(R_basis[k][l] , R_basis_list)
+            )
+        )
+    ),
 
 /* در اینجا الگوریتم ارائه شده به محسابه‌ی فضای پوچ برداری و بردار های آن میپردازد!*/ 
-
 
     C:echelon (At),
 
    C_basis: nonzero_rows(C),
    if C_basis = [] then C_basis : false,
+       if C_basis # false then(
+        for k:1 thru length(C_basis) do(
+            for l:1 thru length(C_basis[k]) do(
+                C_basis_list: endcons(C_basis[k][l] , C_basis_list)
+            )
+        )
+    ),
     /* پایه فضای پوچ */
 
     N1 : addcol(At, ident(n)),
@@ -84,8 +96,28 @@ if  N_basis = [] then N_basis : false,
 /* پایه فضای پوچ چپ */
     N_prime_basis: nonzero_rows(remove_first_rows_cols(N_p, km, n)),
     if  N_prime_basis = [] then N_prime_basis : false,
+
+    if N_basis # false then(
+        for k:1 thru length(N_basis) do(
+            for l:1 thru length(N_basis[k]) do(
+                N_basis_list: endcons(N_basis[k][l] , N_basis_list)
+            )
+        )
+    ),
+
+
+    if N_prime_basis # false then(
+        for k:1 thru length(N_prime_basis) do(
+            for l:1 thru length(N_prime_basis[k]) do(
+                N_prime_basis_list: endcons(N_prime_basis[k][l] , N_prime_basis_list)
+            )
+        )
+    ),
+
+    if  N_basis_list = [] then N_basis_list : false,
+    if  N_prime_basis_list = [] then N_prime_basis_list : false,
     /* برگرداندن نتایج */
-    [R_basis, C_basis, N_basis, N_prime_basis]
+    [R_basis_list, C_basis_list, N_basis_list, N_prime_basis_list]
 )$
 
 
