@@ -333,15 +333,23 @@ particular_solution(L, a) := block(
 
 
 /* q4 */
-
-mat_bb(A, B, Phi) := block (
-  [T, P, a, b, Phiprim],
-  P: transpose(apply(matrix, Phi)),
-  a: transpose(apply(matrix, A)),
-  b: transpose(apply(matrix, B)),
-  T: invert(b).a,
-  Phiprim: T.P,
-  return(Phiprim)
+mat_bb(B, Bp, phi) := block(
+  [n, m, vars, eqns, sol, coeffs, P, T, k],
+  P:[],
+  for k:1 thru length(phi) do(
+  n:length(first(phi)),
+      m: length(Bp),
+    vars: makelist(concat('a, i), i, 1, m),
+    eqns: makelist(
+        phi[k][j] = sum(vars[i] * Bp[i][j], i, 1, m),
+        j, 1, n
+    ),
+    sol: linsolve(eqns, vars),
+    coeffs: map(rhs, sol),
+    P:append(P,[coeffs])
+  ),
+  T: transpose(apply(matrix, P)),
+  return(T)
 )$
 
 change_of_basis_matrix(B1, B2) := block(
